@@ -4,15 +4,10 @@ const updateEntryToFile = require("../src/updateEntryToFile").updateEntryToFile;
 const fs = require("fs");
 
 describe("addNewEntry", function() {
-  it("should return new object when previously no entries were there", function() {
+  it("should update entry when previously no entries were there", function() {
     let date = new Date();
-    let actual = addNewEntry({}, "1111", "apple", "1", date);
-    let expected = {
-      "1111": {
-        empId: "1111",
-        orders: [{ beverage: "apple", qty: "1", date: date }]
-      }
-    };
+    let actual = addNewEntry([], "1111", "apple", "1", date);
+    let expected = [{ empId: "1111", beverage: "apple", qty: "1", date: date }];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -20,68 +15,38 @@ describe("addNewEntry", function() {
     let date1 = new Date();
     let date2 = new Date();
     let actual = addNewEntry(
-      {
-        "1111": {
-          empId: "1111",
-          orders: [{ beverage: "apple", qty: "1", date: date1 }]
-        }
-      },
+      [{ empId: "1111", beverage: "apple", qty: "1", date: date1 }],
       "1112",
       "orange",
       "2",
       date2
     );
-    let expected = {
-      "1111": {
-        empId: "1111",
-        orders: [{ beverage: "apple", qty: "1", date: date1 }]
-      },
-      "1112": {
-        empId: "1112",
-        orders: [{ beverage: "orange", qty: "2", date: date2 }]
-      }
-    };
-    assert.deepStrictEqual(actual, expected);
-  });
-
-  it("should update object if same empId is already there", function() {
-    let date1 = new Date();
-    let date2 = new Date();
-    actual = addNewEntry(
-      {
-        "1111": {
-          empId: "1111",
-          orders: [{ beverage: "apple", qty: "1", date: date1 }]
-        }
-      },
-      "1111",
-      "orange",
-      "2",
-      date2
-    );
-    let expected = {
-      "1111": {
-        empId: "1111",
-        orders: [
-          { beverage: "apple", qty: "1", date: date1 },
-          { beverage: "orange", qty: "2", date: date2 }
-        ]
-      }
-    };
+    let expected = [
+      { empId: "1111", beverage: "apple", qty: "1", date: date1 },
+      { empId: "1112", beverage: "orange", qty: "2", date: date2 }
+    ];
     assert.deepStrictEqual(actual, expected);
   });
 });
 
 describe("updateEntryToFile", function() {
   it("should write to file if file content is empty", function() {
-    let filePath = "./test/testFile.txt";
+    let filePath = "somePath";
     let date = new Date();
 
     const fileSystem = {
       reader: function() {
-        return "{}";
+        return "[]";
       },
-      writer: function() {
+      writer: function(path, text, formater) {
+        assert.strictEqual(path, "somePath");
+        assert.strictEqual(
+          text,
+          '[{"empId":"11111","beverage":"orange","qty":"1","date":' +
+            JSON.stringify(date) +
+            "}]"
+        );
+        assert.strictEqual(formater, "utf8");
         return;
       }
     };
@@ -99,12 +64,20 @@ describe("updateEntryToFile", function() {
   });
 
   it("should write to file if file content is not empty", function() {
-    let fileName = "./test/testFile.txt";
+    let fileName = "somePath";
     const fileSystem = {
       reader: function() {
-        return '{"11111":{"empId":"11111","orders":[{"beverage":"orange","qty":"1","date":"2019-11-23T10:59:10.216Z"}]}}';
+        return '[{"empId":"11111","beverage":"orange","qty":"1","date":"someDate"}]';
       },
-      writer: function() {
+      writer: function(path, text, formater) {
+        assert.strictEqual(path, "somePath");
+        assert.strictEqual(
+          text,
+          '[{"empId":"11111","beverage":"orange","qty":"1","date":"someDate"},{"empId":"11111","beverage":"orange","qty":"1","date":' +
+            JSON.stringify(date) +
+            "}]"
+        );
+        assert.strictEqual(formater, "utf8");
         return;
       }
     };

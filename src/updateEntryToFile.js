@@ -1,10 +1,11 @@
 const addNewEntry = function(prevEntry, empId, beverageName, qty, date) {
-  const entryDetails = { beverage: beverageName, qty: qty, date: date };
-  if (!prevEntry.hasOwnProperty(empId)) {
-    prevEntry[empId] = { empId: empId, orders: [] };
-  }
-
-  prevEntry[empId].orders.push(entryDetails);
+  const entryDetails = {
+    empId: empId,
+    beverage: beverageName,
+    qty: qty,
+    date: date
+  };
+  prevEntry.push(entryDetails);
   return prevEntry;
 };
 

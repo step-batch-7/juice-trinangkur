@@ -13,7 +13,7 @@ const parseOption = function(userArg, filePath, fileSystem) {
     !fileSystem.exists(filePath) ||
     fileSystem.reader(filePath, "utf8") == ""
   ) {
-    fileSystem.writer(filePath, "{}", "utf8");
+    fileSystem.writer(filePath, "[]", "utf8");
   }
   let textToFormat = readWriteActions[option](
     userArg,
