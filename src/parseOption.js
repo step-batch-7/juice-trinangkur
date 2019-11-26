@@ -2,9 +2,8 @@ const updateEntryToFile = require("./updateEntryToFile").updateEntryToFile;
 const queryFromFile = require("./queryFromFile").queryFromFile;
 const configText = require("./configText");
 
-const parseOption = function(userArg, filePath, fileSystem) {
+const parseOption = function(userArg, filePath, fileSystem, date) {
   const option = userArg[0];
-  const date = new Date();
   let readWriteActions = {
     "--save": updateEntryToFile,
     "--query": queryFromFile

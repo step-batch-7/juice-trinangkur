@@ -9,7 +9,7 @@ const main = function() {
     exists: fs.existsSync,
     writer: fs.writeFileSync
   };
-  let stringToDisplay = parseOption(userArgs, fileName, fileSystem);
+  let stringToDisplay = parseOption(userArgs, fileName, fileSystem, new Date());
   console.log(stringToDisplay);
 };
 
