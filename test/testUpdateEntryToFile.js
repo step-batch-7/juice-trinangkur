@@ -9,8 +9,8 @@ describe("addNewEntry", function() {
     let actual = addNewEntry({}, "1111", "apple", "1", date);
     let expected = {
       "1111": {
-        orders: [{ beverage: "apple", qty: "1", date: date }],
-        total: "1"
+        empId: "1111",
+        orders: [{ beverage: "apple", qty: "1", date: date }]
       }
     };
     assert.deepStrictEqual(actual, expected);
@@ -22,8 +22,8 @@ describe("addNewEntry", function() {
     let actual = addNewEntry(
       {
         "1111": {
-          orders: [{ beverage: "apple", qty: "1", date: date1 }],
-          total: "1"
+          empId: "1111",
+          orders: [{ beverage: "apple", qty: "1", date: date1 }]
         }
       },
       "1112",
@@ -33,25 +33,25 @@ describe("addNewEntry", function() {
     );
     let expected = {
       "1111": {
-        orders: [{ beverage: "apple", qty: "1", date: date1 }],
-        total: "1"
+        empId: "1111",
+        orders: [{ beverage: "apple", qty: "1", date: date1 }]
       },
       "1112": {
-        orders: [{ beverage: "orange", qty: "2", date: date2 }],
-        total: "2"
+        empId: "1112",
+        orders: [{ beverage: "orange", qty: "2", date: date2 }]
       }
     };
     assert.deepStrictEqual(actual, expected);
   });
 
-  it("should update ibject if same empId is already there", function() {
+  it("should update object if same empId is already there", function() {
     let date1 = new Date();
     let date2 = new Date();
     actual = addNewEntry(
       {
         "1111": {
-          orders: [{ beverage: "apple", qty: "1", date: date1 }],
-          total: "1"
+          empId: "1111",
+          orders: [{ beverage: "apple", qty: "1", date: date1 }]
         }
       },
       "1111",
@@ -61,11 +61,11 @@ describe("addNewEntry", function() {
     );
     let expected = {
       "1111": {
+        empId: "1111",
         orders: [
           { beverage: "apple", qty: "1", date: date1 },
           { beverage: "orange", qty: "2", date: date2 }
-        ],
-        total: "3"
+        ]
       }
     };
     assert.deepStrictEqual(actual, expected);
@@ -74,45 +74,50 @@ describe("addNewEntry", function() {
 
 describe("updateEntryToFile", function() {
   it("should write to file if file content is empty", function() {
-    let fileName = "./test/testFile.txt";
-    fs.writeFileSync(fileName, "", "utf8");
+    let filePath = "./test/testFile.txt";
     let date = new Date();
 
-    updateEntryToFile(
+    const fileSystem = {
+      reader: function() {
+        return "{}";
+      },
+      writer: function() {
+        return;
+      }
+    };
+
+    let actual = updateEntryToFile(
       ["--save", "--beverage", "orange", "--empId", "11111", "--qty", "1"],
-      fileName,
+      filePath,
+      fileSystem,
       date
     );
-    let actual = fs.readFileSync(fileName, "utf8");
-    let expected =
-      '{"11111":{"orders":[{"beverage":"orange","qty":"1","date":' +
-      JSON.stringify(date) +
-      '}],"total":"1"}}';
 
-    assert.strictEqual(actual, expected);
-    fs.unlinkSync(fileName);
+    let expected = ["11111", "orange", "1", date.toJSON()];
+
+    assert.deepStrictEqual(actual, expected);
   });
+
   it("should write to file if file content is not empty", function() {
     let fileName = "./test/testFile.txt";
-    fs.writeFileSync(
-      fileName,
-      '{"11111":{"orders":[{"beverage":"orange","qty":"1","date":"2019-11-23T10:59:10.216Z"}],"total":"1"}}',
-      "utf8"
-    );
+    const fileSystem = {
+      reader: function() {
+        return '{"11111":{"empId":"11111","orders":[{"beverage":"orange","qty":"1","date":"2019-11-23T10:59:10.216Z"}]}}';
+      },
+      writer: function() {
+        return;
+      }
+    };
     let date = new Date();
 
-    updateEntryToFile(
+    let actual = updateEntryToFile(
       ["--save", "--beverage", "orange", "--empId", "11111", "--qty", "1"],
       fileName,
+      fileSystem,
       date
     );
-    let actual = fs.readFileSync(fileName, "utf8");
-    let expected =
-      '{"11111":{"orders":[{"beverage":"orange","qty":"1","date":"2019-11-23T10:59:10.216Z"},{"beverage":"orange","qty":"1","date":' +
-      JSON.stringify(date) +
-      '}],"total":"2"}}';
+    let expected = ["11111", "orange", "1", date.toJSON()];
 
-    assert.strictEqual(actual, expected);
-    fs.unlinkSync(fileName);
+    assert.deepStrictEqual(actual, expected);
   });
 });
