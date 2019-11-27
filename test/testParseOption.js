@@ -70,7 +70,7 @@ describe("parseOption.js", function() {
     };
     date = new Date();
     let actual = parseOption(
-      ["--query", "empId", "11111"],
+      ["--query", "--empId", "11111"],
       "somePath",
       fileSysetm,
       date
@@ -94,7 +94,7 @@ describe("parseOption.js", function() {
     };
     date = new Date();
     let actual = parseOption(
-      ["--query", "empId", "11111"],
+      ["--query", "--empId", "11111"],
       "somePath",
       fileSysetm,
       date

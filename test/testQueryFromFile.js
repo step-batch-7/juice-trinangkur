@@ -56,4 +56,45 @@ describe("queryFromFile", function() {
     );
     assert.deepStrictEqual(actual, { orders: [], total: 0 });
   });
+  it("should return record along date given if record is there", function() {
+    const fileSystem = {
+      reader: function() {
+        return '[{"empId":"1111","beverage":"orange","qty":"1","date":"2019-11-25T11:05:15.702Z"},{"empId":"1111","beverage":"orange","qty":"1","date":"2019-11-25T12:38:29.890Z"}]';
+      }
+    };
+
+    let actual = queryFromFile(
+      ["--query", "--date", "2019-11-25"],
+      "filePath",
+      fileSystem
+    );
+
+    let expected = {
+      orders: [
+        "1111,orange,1,2019-11-25T11:05:15.702Z",
+        "1111,orange,1,2019-11-25T12:38:29.890Z"
+      ],
+      total: 2
+    };
+    assert.deepStrictEqual(actual, expected);
+  });
+  it("should filter record along date given if record is there", function() {
+    const fileSystem = {
+      reader: function() {
+        return '[{"empId":"1111","beverage":"orange","qty":"1","date":"2019-11-25T11:05:15.702Z"},{"empId":"1111","beverage":"orange","qty":"1","date":"2019-11-24T12:38:29.890Z"}]';
+      }
+    };
+
+    let actual = queryFromFile(
+      ["--query", "--date", "2019-11-25"],
+      "filePath",
+      fileSystem
+    );
+
+    let expected = {
+      orders: ["1111,orange,1,2019-11-25T11:05:15.702Z"],
+      total: 1
+    };
+    assert.deepStrictEqual(actual, expected);
+  });
 });

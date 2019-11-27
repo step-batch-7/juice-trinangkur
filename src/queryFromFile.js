@@ -1,4 +1,4 @@
-const insertEmpIdAndAdd = function(newRecord, prevRecord) {
+const concatAndCount = function(newRecord, prevRecord) {
   let elementsToJoin = [
     prevRecord.empId,
     prevRecord.beverage,
@@ -10,19 +10,28 @@ const insertEmpIdAndAdd = function(newRecord, prevRecord) {
   return newRecord;
 };
 
-const findRecords = function(empId) {
+const findEmpRecords = function(empId) {
   return function(record) {
     return record.empId == empId;
   };
 };
 
-const queryFromFile = function(userArgs, filePath, fileSystem) {
-  let empId = userArgs[2];
-  let prevEntries = JSON.parse(fileSystem.reader(filePath, "utf8"));
-  let transactions = { orders: [], total: 0 };
-  prevEntries = prevEntries.filter(findRecords(empId));
+const findDateRecords = function(date) {
+  return function(record) {
+    return date == record.date.slice(0, 10);
+  };
+};
 
-  transactions = prevEntries.reduce(insertEmpIdAndAdd, transactions);
+const queryFromFile = function(userArgs, filePath, fileSystem) {
+  let keyToQuery = userArgs[1];
+  let keyValue = userArgs[2];
+  let keyFunctions = { "--empId": findEmpRecords, "--date": findDateRecords };
+  let findKeyRecords = keyFunctions[keyToQuery];
+  let prevEntries = JSON.parse(fileSystem.reader(filePath, "utf8"));
+  prevEntries = prevEntries.filter(findKeyRecords(keyValue));
+
+  let transactions = { orders: [], total: 0 };
+  transactions = prevEntries.reduce(concatAndCount, transactions);
 
   return transactions;
 };
