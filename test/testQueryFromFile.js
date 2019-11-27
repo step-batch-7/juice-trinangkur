@@ -97,4 +97,23 @@ describe("queryFromFile", function() {
     };
     assert.deepStrictEqual(actual, expected);
   });
+  it("should filter record along date and id given if record is there", function() {
+    const fileSystem = {
+      reader: function() {
+        return '[{"empId":"1111","beverage":"orange","qty":"1","date":"2019-11-25T11:05:15.702Z"},{"empId":"1112","beverage":"orange","qty":"1","date":"2019-11-25T12:38:29.890Z"},{"empId":"1112","beverage":"orange","qty":"1","date":"2019-11-24T12:38:29.990Z"}]';
+      }
+    };
+
+    let actual = queryFromFile(
+      ["--query", "--date", "2019-11-25", "--empId", "1112"],
+      "filePath",
+      fileSystem
+    );
+
+    let expected = {
+      orders: ["1112,orange,1,2019-11-25T12:38:29.890Z"],
+      total: 1
+    };
+    assert.deepStrictEqual(actual, expected);
+  });
 });
