@@ -123,7 +123,7 @@ describe("parseOption.js", function() {
       fileSysetm,
       date
     );
-    let expected = "Employee ID,Beverage,Quantity,Date\n\ntotal: 0 jucies";
+    let expected = "wrong input";
     assert.strictEqual(actual, expected);
   });
 });

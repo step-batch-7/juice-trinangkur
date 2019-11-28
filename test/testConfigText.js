@@ -22,7 +22,7 @@ describe("configQueryText", function() {
       total: 1
     });
     let expected =
-      "Employee ID,Beverage,Quantity,Date\n11111,orange,1,someDate\ntotal: 1 jucies";
+      "Employee ID,Beverage,Quantity,Date\n11111,orange,1,someDate\ntotal: 1 jucie";
     assert.strictEqual(actual, expected);
   });
   it("should return empty list when no record of given input is there", function() {
