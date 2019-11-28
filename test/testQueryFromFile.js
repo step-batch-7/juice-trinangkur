@@ -9,11 +9,7 @@ describe("queryFromFile", function() {
       }
     };
 
-    let actual = queryFromFile(
-      ["--query", "--empId", "11111"],
-      "filePath",
-      fileSystem
-    );
+    let actual = queryFromFile({ "--empID": "11111" }, "filePath", fileSystem);
     let expected = {
       orders: ["11111,orange,1,2019-11-25T11:02:31.571Z"],
       total: 1
@@ -28,11 +24,7 @@ describe("queryFromFile", function() {
       }
     };
 
-    let actual = queryFromFile(
-      ["--query", "--empId", "1111"],
-      "filePath",
-      fileSystem
-    );
+    let actual = queryFromFile({ "--empID": "1111" }, "filePath", fileSystem);
     let expected = {
       orders: [
         "1111,orange,1,2019-11-25T11:05:15.702Z",
@@ -49,11 +41,7 @@ describe("queryFromFile", function() {
         return "[]";
       }
     };
-    let actual = queryFromFile(
-      ["--query", "--empId", "11111"],
-      "filePath",
-      fileSystem
-    );
+    let actual = queryFromFile({ "--empID": "11111" }, "filePath", fileSystem);
     assert.deepStrictEqual(actual, { orders: [], total: 0 });
   });
   it("should return record along date given if record is there", function() {
@@ -64,7 +52,7 @@ describe("queryFromFile", function() {
     };
 
     let actual = queryFromFile(
-      ["--query", "--date", "2019-11-25"],
+      { "--date": "2019-11-25" },
       "filePath",
       fileSystem
     );
@@ -86,7 +74,7 @@ describe("queryFromFile", function() {
     };
 
     let actual = queryFromFile(
-      ["--query", "--date", "2019-11-25"],
+      { "--date": "2019-11-25" },
       "filePath",
       fileSystem
     );
@@ -105,7 +93,7 @@ describe("queryFromFile", function() {
     };
 
     let actual = queryFromFile(
-      ["--query", "--date", "2019-11-25", "--empId", "1112"],
+      { "--date": "2019-11-25", "--empId": "1112" },
       "filePath",
       fileSystem
     );

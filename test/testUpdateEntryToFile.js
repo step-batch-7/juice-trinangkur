@@ -52,7 +52,7 @@ describe("updateEntryToFile", function() {
     };
 
     let actual = updateEntryToFile(
-      ["--save", "--beverage", "orange", "--empId", "11111", "--qty", "1"],
+      { "--beverage": "orange", "--empId": "11111", "--qty": "1" },
       filePath,
       fileSystem,
       date
@@ -84,7 +84,7 @@ describe("updateEntryToFile", function() {
     let date = new Date();
 
     let actual = updateEntryToFile(
-      ["--save", "--beverage", "orange", "--empId", "11111", "--qty", "1"],
+      { "--empId": "11111", "--beverage": "orange", "--qty": "1" },
       fileName,
       fileSystem,
       date

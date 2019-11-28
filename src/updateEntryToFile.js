@@ -10,9 +10,9 @@ const addNewEntry = function(prevEntry, empId, beverageName, qty, date) {
 };
 
 const updateEntryToFile = function(newEntry, filePath, fileSystem, date) {
-  const empId = newEntry[4];
-  const beverageName = newEntry[2];
-  const qty = newEntry[6];
+  const empId = newEntry["--empId"];
+  const beverageName = newEntry["--beverage"];
+  const qty = newEntry["--qty"];
   let prevEntry = fileSystem.reader(filePath, "utf8");
 
   prevEntry = JSON.parse(prevEntry);

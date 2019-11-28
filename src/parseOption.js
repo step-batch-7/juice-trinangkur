@@ -1,9 +1,13 @@
 const updateEntryToFile = require("./updateEntryToFile").updateEntryToFile;
 const queryFromFile = require("./queryFromFile").queryFromFile;
 const configText = require("./configText");
+const parseValidOption = require("./parseValidOptions").parseValidOptions;
 
 const parseOption = function(userArg, filePath, fileSystem, date) {
-  const option = userArg[0];
+  commandAndOptions = parseValidOption(userArg);
+  if (!commandAndOptions) {
+    return "wrong input";
+  }
   let readWriteActions = {
     "--save": updateEntryToFile,
     "--query": queryFromFile
@@ -14,8 +18,8 @@ const parseOption = function(userArg, filePath, fileSystem, date) {
   ) {
     fileSystem.writer(filePath, "[]", "utf8");
   }
-  let textToFormat = readWriteActions[option](
-    userArg,
+  let textToFormat = readWriteActions[commandAndOptions.command](
+    commandAndOptions.options,
     filePath,
     fileSystem,
     date
@@ -24,7 +28,7 @@ const parseOption = function(userArg, filePath, fileSystem, date) {
     "--save": configText.configSaveText,
     "--query": configText.configQueryText
   };
-  return outputTextActions[option](textToFormat);
+  return outputTextActions[commandAndOptions.command](textToFormat);
 };
 
 exports.parseOption = parseOption;
