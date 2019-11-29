@@ -10,9 +10,9 @@ const concatAndCount = function(newRecord, prevRecord) {
   return newRecord;
 };
 
-const findRecords = function(empId) {
+const findRecords = function(key, valueToSearch) {
   return function(record) {
-    return record.empId == empId;
+    return record[key] == valueToSearch;
   };
 };
 
@@ -25,13 +25,14 @@ const findDateRecords = function(date) {
 const giveFilteredData = function(args, prevEntries) {
   let empId = args["--empId"];
   let matchedLogs =
-    (empId && prevEntries.filter(findRecords(empId))) || prevEntries;
+    (empId && prevEntries.filter(findRecords("empId", empId))) || prevEntries;
   let date = args["--date"];
   matchedLogs =
     (date && matchedLogs.filter(findDateRecords(date))) || matchedLogs;
   let beverage = args["--beverage"];
   matchedLogs =
-    (beverage && matchedLogs.filter(findRecords(beverage))) || matchedLogs;
+    (beverage && matchedLogs.filter(findRecords("beverage", beverage))) ||
+    matchedLogs;
   return matchedLogs;
 };
 
