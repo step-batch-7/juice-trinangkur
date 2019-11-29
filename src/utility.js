@@ -7,7 +7,9 @@ const isValidId = function(element1, element2) {
 };
 
 const isValidBeverage = function(element1, element2) {
-  return element1 === "--beverage" && element2 != undefined;
+  return (
+    element1 === "--beverage" && element2 != undefined && element2.length > 0
+  );
 };
 
 const isValidDate = function(element1, element2) {
