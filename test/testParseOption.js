@@ -2,7 +2,7 @@ const parseOption = require("../src/parseOption").parseOption;
 const assert = require("assert");
 
 describe("parseOption.js", function() {
-  /*it("retrun output text for save function when file exist", function() {
+  it("retrun output text for save function when file exist", function() {
     const fileSysetm = {
       reader: function() {
         return "[]";
@@ -53,7 +53,7 @@ describe("parseOption.js", function() {
       "Transaction Recorded:\nEmployee ID,Beverage,Quantity,Date\n11111,orange,2," +
       date.toJSON();
     assert.strictEqual(actual, expected);
-  });*/
+  });
   it("should return output text for query if file is not there", function() {
     const fileSysetm = {
       reader: function() {

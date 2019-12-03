@@ -14,5 +14,3 @@ const main = function() {
 };
 
 main();
-
-console.log("Anna Juice Ltd");
